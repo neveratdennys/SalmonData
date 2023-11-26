@@ -24,7 +24,14 @@ with ZipFile(io.BytesIO(zip_data)) as my_zip:
            
             df = pd.read_csv(io.BytesIO(cleaned_bytes), skiprows = 1)
 
-            # TODO: add new column that specify which fishing method is being used
+            # Derive fishing method from the filename and add a new column
+            if 'cs-tr' in file_name:
+                df['Fishing_Method'] = 'troll'
+            elif 'cs-sn' in file_name:
+                df['Fishing_Method'] = 'seine'
+            elif 'cs-gn' in file_name:
+                df['Fishing_Method'] = 'gillnet'
+
             
             data_frames.append(df)
 
@@ -34,6 +41,6 @@ with ZipFile(io.BytesIO(zip_data)) as my_zip:
 # Combine or perform operations on the DataFrames as needed
 combined_data = pd.concat(data_frames)
 
-# Work with the combined data as needed
-print("Combined Data:")
-print(combined_data.shape)
+# Save the combined and processed data as 'processed.csv'
+combined_data.to_csv('processed.csv', index=False)
+print("Saved processed data as processed.csv")
